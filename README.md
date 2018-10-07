@@ -1,28 +1,98 @@
 # Persona API
 The Persona API is a fake RESTful API that delivers made up data on a few endpoints. The data sits within a zip file and needs to be decompressed only on deployment not when it sits in this repository. So you have to find a way to do that in an elegant manner.
 
-## Must Haves
+### IMPORTANT: Read the explanation.txt for a basic understand for my decision in the creation of the Persona API (this file should not exists in the repository)
 
-- Develop the server and endpoints mentioned below with a framework of your preference
-- Think carefully about data storage and scalability. Determine any limitations of your server
-- Write a few unit tests with good code coverage
+### Setting up the container
 
-The REST API uses the data provided and has the following endpoints:
+###### BUILD CONTAINER:
 
-- GET /search/{username} Searches the data for the specific username
-- GET /people Returns all people with pagination
-- DELETE /people/{username} Delete a person
+    docker build -t persona-api:<version> .
 
-We would like to see good practices regarding the REST API, project structure, code documentation and code organisation. Your server will need to be able to ingest new data and we are expecting to see good use of design patterns where needed and good security practices. 
+###### RUN CONTAINER:
 
+    docker run -p <local_port>:<docker_port> -it persona-api:<version>
 
-## Nice To Haves
+IMPORTANT: The first port (local port) can be what ever I want the second port (docker port) must be the same as the PORT env in the docker file. If you want, you can change the docker port when starting the container like so:
 
-- Nice to have would be to containerise your server so that it can deployed easily.
-- A front-end that will allow users to search for a person and return back their information. 
+    docker run -p <local_port>:<docker_port> -e PORT=<docker_port> -it persona-api:<version>
 
 
-## Go The Extra Mile
+### Setting up the local enviroment for debugging using Pycharm
 
-Come up with some ideas to visualise the fake profile data on a front-end using a framework of your choice.
+###### USING VIRTUALENV:
+
+Create a virtual environment:
+
+    virtualenv <env_name> --python=<path_to_python>
+
+Create a virtual environment (inheriting systems package):
+
+    virtualenv <env_name> --python=<path_to_python> --system-site-packages
+
+Activate virtual environment:
+
+    source <env_name>/bin/activate
+
+Deactivate virtual environment:
+
+    deactivate
+
+###### USING VIRTUALENVWRAPPER:
+
+Install virtualenvwrapper:
+
+    pip install virtualenvwrapper
+
+Setting virtualenvwrapper in bash_profile:
+
+    # Setting virtualenvwrapper
+
+    # set where virutal environments will live
+    export WORKON_HOME=$HOME/environment/.virtualenvs
+    # ensure all new environments are isolated from the site-packages directory
+    export VIRTUALENVWRAPPER_VIRTUALENV_ARGS='--no-site-packages'
+    # use the same directory for virtualenvs as virtualenvwrapper
+    export PIP_VIRTUALENV_BASE=$WORKON_HOME
+    # makes pip detect an active virtualenv and install to it
+    export PIP_RESPECT_VIRTUALENV=true
+
+    if [[ -r <path_to_virtualenvwrapper.sh> ]]; then
+    source <path_to_virtualenvwrapper.sh>
+    else
+        echo "WARNING: Can't find virtualenvwrapper.sh"
+    fi
+
+Create a virtual environment:
+
+    mkvirtualenv <env_name> --python=<path_to_python>
+
+Create a virtual environment (inheriting systems package):
+
+    mkvirtualenv <env_name> --python=<path_to_python> --system-site-packages
+
+Activate virtual environment:
+
+    workon <env_name>
+
+Deactivate virtual environment:
+
+    deactivate
+
+IMPORTANT: If using PyCharm make sure to associate the virtual env to the project
+
+###### INSTALL DEPENDENCIES:
+
+Install all the project requirements:
+
+    pip install -r requirements.txt
+
+###### CONFIGURE PYCHARM DEBUGGING SERVER CONFIGURATION:
+* go to edit configuration
+* create a new python configuration (if you use the enterprise edition you may choose a flask configuration)
+* set in the script panel the path to the main flask entrypoint (in this case run.py)
+* set the following enviroment variables: HOST, PORT, DEBUG, SECRET_KEY, LOG_LEVEL
+* set the proper python runtime (should be point to the virtualenv if used one)
+* set the working directory (in this case the path to src folder)
+
 

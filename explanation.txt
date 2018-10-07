@@ -1,0 +1,23 @@
+I designed the Persona-Api backend using the Flask framework, a very powerful light framework in python (Falcon would have
+being an other possible choice). I designed the api it self to allow versioning in order to allow in a simple way new
+features for the api still allowing back portability (the client it self select the endpoint version to point to for the data).
+The code that could depends on the version is inside the folder api/<version>. Inside the api folder I put common utils for all version.
+Inside logic I have the backend logic that the server need to perform (in this case retrieve the persona data).
+The server configuration are stored inside settings.py (all the variables are retrieved from env variables defined in
+the DockerFile, I can easily change them while starting the container and even when the container is already deployed).
+I tried to use the MVC (even I do not have the model part, it is simulated by the json file read by the reader inside logic folder)
+where the routes.py is my controller and views.py is my view, as the name suggest it.
+Using the schema library I developed my serializers for the inputs in order to validate the data base on the api interfaces.
+The persona data are stored in a zip file that is unziped by the server before the first request and than the zip file is deleted.
+The data into the unziped file is retrieved by a class named Reader inside logic/reader. This class use pandas in order to turn
+the json into a dataset and perform the logic required (search by username, retrieve multiple persona with a paginated api and
+also delete a persona by username, the search and the delete are designed to not be based only on the username, if you add in the
+api interfaces new parameters that correspond to keys in the json you could perform the same logic).
+Lastly I used docker in order to containerize the source code for a better portability and easier deployment.
+
+The api are protected by an authorization token that must be in the request header. This token is based on a secret key stored in the
+settings the date of the request and a salt, but in order to secure better this backend I would put this micro services inside a VPC
+(Virtual Private Cloud, if using a cloud provider o VPN if on premises). Putting inside a VPC/VPN would also allowed me to not use
+tls for the communications since the micro services are protected by the VPC/VPN and putting before the microservices an api gateway
+(that use the tls and is reachable from the outside) that routes to the proper endpoints.
+In this case since I do not have a VPC/VPN and an api gateway I will use https with a self signed certificate plus the permission check.
