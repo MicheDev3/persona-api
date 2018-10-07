@@ -21,3 +21,10 @@ settings the date of the request and a salt, but in order to secure better this 
 tls for the communications since the micro services are protected by the VPC/VPN and putting before the microservices an api gateway
 (that use the tls and is reachable from the outside) that routes to the proper endpoints.
 In this case since I do not have a VPC/VPN and an api gateway I will use https with a self signed certificate plus the permission check.
+
+
+Feature improvements could be:
+    - unit test
+    - using a database for the data instead the json file
+    - using memcache or redis for caching data
+    - saving secret_key into a data model in order to change it easily

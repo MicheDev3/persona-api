@@ -9,7 +9,7 @@ __all__ = ['SearchValidator', 'PeopleValidator']
 
 
 #########################################
-# Validators                            #
+# Persona Validators                    #
 #########################################
 class SearchValidator(Validator):
     """

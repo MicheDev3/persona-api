@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # coding=UTF-8
 
+import logging
+
 from flask import Blueprint, request, jsonify
 
 from views import *
@@ -11,7 +13,12 @@ from src.api.utils import check_permission
 
 v1 = Blueprint("v1", __name__)
 
+logger = logging.getLogger(__name__)
 
+
+#########################################
+# Persona Routes                        #
+#########################################
 @v1.route('/search', methods=['GET'])
 @check_permission
 def search():
@@ -21,6 +28,7 @@ def search():
         return jsonify({'data': data}), 200
 
     errors = validator.errors
+    logger.warning("Search errors: %s" % errors)
     return jsonify({'errors': errors}), 400
 
 
@@ -33,4 +41,6 @@ def people():
         return jsonify({'data': data}), 200
 
     errors = validator.errors
+    logger.warning("People errors: %s" % errors)
     return jsonify({'errors': errors}), 400
+#########################################

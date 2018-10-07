@@ -5,6 +5,7 @@ import hmac
 import base64
 import hashlib
 import datetime
+import logging
 
 from functools import wraps
 
@@ -14,17 +15,19 @@ from flask import request, abort
 
 from src import settings
 
+logger = logging.getLogger(__name__)
+
 
 #########################################
 # Utils                                 #
 #########################################
 def check_permission(f):
     """
-    Check request permission
+        Check request permission
     """
     def get_signature():
         """
-        :return: signature to be matched against the request
+            :return: signature to be matched against the request
         """
         # using a date plus a salt in order to create the raw string
         raw = datetime.date.today().strftime('%d/%m/%Y') + u"#persona#api#"
@@ -36,6 +39,7 @@ def check_permission(f):
     @wraps(f)
     def decorated(*args, **kwargs):
         signature = request.headers.get('Authorization', None)
+        logger.debug("Signature: %s" % signature)
         if not signature or signature != get_signature():
             abort(403)
         return f(*args, **kwargs)
@@ -49,7 +53,7 @@ def check_permission(f):
 #########################################
 class Validator(object):
     """
-    Base class for validating data
+        Base class for validating data
     """
 
     def __init__(self, data, method):
@@ -100,6 +104,9 @@ class Validator(object):
 # Base View                             #
 #########################################
 class View(object):
+    """
+        Base class for view logic
+    """
 
     def __init__(self, data, method):
         self._method = method

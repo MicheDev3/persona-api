@@ -8,6 +8,9 @@ from src.logic.reader import Reader
 __all__ = ['SearchView', 'PeopleView']
 
 
+#########################################
+# Persona Views                         #
+#########################################
 class SearchView(View):
 
     methods = {'GET': 'search'}
@@ -35,3 +38,4 @@ class PeopleView(View):
         reader = Reader('/assets/fake_profiles.json')
         method = getattr(reader, self.methods[self._method])
         return method(**self._data)
+#########################################
