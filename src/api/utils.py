@@ -64,8 +64,6 @@ class Validator(object):
         raise NotImplementedError
 
     def _run_validation(self):
-        if not self._data:
-            raise SchemaError("No data provided")
         return self.validator().validate(self._data)
 
     def is_valid(self):
